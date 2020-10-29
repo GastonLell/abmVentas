@@ -18,6 +18,7 @@ if($_POST){
       $venta->actualizar();
     } else {
       $venta->insertar();
+      $venta->descontarStock($venta->fk_idproducto, $venta->cantidad);
     }
   } else if(isset($_POST['btnBorrar'])){
     $venta->eliminar();
@@ -93,7 +94,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
               <div class="form-group col-sm-6 col-12">
                 <label for="txtHora">Hora: </label>
                 <input type="time" id="txtHora" name="txtHora" class="form-control" 
-                value="<?php echo isset($_GET['id']) ? date('Y-m-d', strtotime($venta->hora)) : '' ?>"
+                value="<?php echo isset($_GET['id']) ? date('H:i', strtotime($venta->hora)) : '' ?>"
                 required>
               </div>
               <div class="form-group col-12 col-sm-6 ">

@@ -71,7 +71,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
           <div>
             <h2 class="h3 bt-3 text-gray-800 mb-4">Productos</h2>
           </div>
-          <form action="" method="POST" enctype="multipart/form-date">
+          <form action="" method="POST" enctype="multipart/form-data">
 
             <div class="botones-crud mb-3">
               <a href="productos.php" class="mr-2 btn btn-primary">Listado</a>
@@ -117,9 +117,9 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                   </textarea>
                 </div>
                 <div class="form-group col-12 col-sm-6">
-                  <label for="fileImagen">Imagen: </label>
-                  <input type="file" name="fileImagen" id="fileImagen" class="form-control-file">
-                  <img src="files/" class="img-thumbnail">
+                  <label for="archivo">Imagen: </label>
+                  <input type="file" name="archivo" id="archivo" class="form-control-file">
+                  <img src="" class="img-thumbnail">
                 </div>
                   
               </div>

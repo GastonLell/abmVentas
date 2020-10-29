@@ -148,9 +148,26 @@ class Venta {
             $obj->total = $fila['total'];
             $aVentas[] = $obj;
         }
-
         return $aVentas;
+    }
+    public function descontarStock($id, $cantidad){
+        // conectar con base de datos
+        $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE);
 
+        // solicitar la cantidad actual
+        $cantidadStock = $mysqli->query("SELECT cantidad FROM productos WHERE idproducto = $id");
+        
+        // convierto la cantidad solicitada en un array
+        $fila = $cantidadStock->fetch_assoc();
+
+        // restar la cantidad de la venta de la actual
+        $cantidadDevolver = $fila['cantidad'] - $this->cantidad;
+
+        // actualizar la cantidad de los productos
+        $mysqli->query("UPDATE productos SET cantidad = '$cantidadDevolver' WHERE idproducto = $id");
+
+        
+        $mysqli->close();
     }
 }
 
