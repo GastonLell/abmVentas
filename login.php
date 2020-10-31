@@ -3,7 +3,7 @@
 session_start();
 
 // si se envia el formulario
-if(isset($_POST)){
+if($_POST){
 
   // tomamos los valores ingresados
   $usuario = trim($_POST['txtUsuario']);

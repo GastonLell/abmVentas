@@ -129,12 +129,23 @@ class Venta {
         $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE);
 
         $resultado = $mysqli->query(
-            "SELECT idventa, fk_idcliente, fk_idproducto, fecha, cantidad, preciounitario, total
-            FROM ventas"
+            "SELECT 
+                A.idventa,
+                A.fecha,
+                A.preciounitario,
+                A.fk_idcliente,
+                A.cantidad,
+                A.total,
+                B.nombre AS nombre_cliente,
+                A.fk_idproducto,
+                C.nombre AS nombre_producto
+            FROM ventas A
+            INNER JOIN clientes B ON B.idcliente = A.fk_idcliente
+            INNER JOIN productos C ON C.idproducto = A.fk_idproducto"
         );
 
         if(!$resultado){
-            printf("Error en query: %s\r", $mysqli->error . " " . $sql);
+            printf("Error en query: %s\r", $mysqli->error . " " . $resultado);
         }
 
         while($fila = $resultado->fetch_assoc()){
@@ -142,13 +153,56 @@ class Venta {
             $obj->idventa = $fila['idventa'];
             $obj->fk_idclietne = $fila['fk_idcliente'];
             $obj->fk_idproducto = $fila['fk_idproducto'];
-            $obj->fechaCon = $fila['fecha'];
             $obj->cantidad = $fila['cantidad'];
             $obj->preciounitario = $fila['preciounitario'];
+            $obj->nombre_cliente = $fila['nombre_cliente'];
+            $obj->nombre_producto = $fila['nombre_producto'];
             $obj->total = $fila['total'];
             $aVentas[] = $obj;
         }
         return $aVentas;
+    }
+    public function obtenerVentasClientes($id){
+        $cantidad = 0;
+
+        $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE);
+
+
+        $sql =  "select COUNT(*) as cantidad FROM ventas WHERE fk_idcliente = $id ";
+        
+
+        if(!$resultado = $mysqli->query($sql)){
+            printf("Error en query: %s\r", $mysqli->error . " " . $sql);
+        }
+
+        if($fila = $resultado->fetch_assoc()){
+            $cantidad = $fila['cantidad'];
+        }
+        
+        $mysqli->close();
+
+        return $cantidad;
+    }
+    public function obtenerProductosEnVenta($id){
+        $cantidad = 0;
+
+        $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE);
+
+
+        $sql =  "select COUNT(*) as cantidad FROM ventas WHERE fk_idproducto = $id ";
+        
+
+        if(!$resultado = $mysqli->query($sql)){
+            printf("Error en query: %s\r", $mysqli->error . " " . $sql);
+        }
+
+        if($fila = $resultado->fetch_assoc()){
+            $cantidad = $fila['cantidad'];
+        }
+        
+        $mysqli->close();
+
+        return $cantidad;
     }
     public function descontarStock($id, $cantidad){
         // conectar con base de datos

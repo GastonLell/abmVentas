@@ -94,30 +94,42 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
               <div class="form-group col-sm-6 col-12">
                 <label for="txtHora">Hora: </label>
                 <input type="time" id="txtHora" name="txtHora" class="form-control" 
-                value="<?php echo isset($_GET['id']) ? date('H:i', strtotime($venta->hora)) : '' ?>"
+                value="<?php echo isset($_GET['id']) ? date('H:i', strtotime($venta->fecha)) : '' ?>"
                 required>
               </div>
               <div class="form-group col-12 col-sm-6 ">
                 <label for="lstCliente">Cliente: </label>
                 <select name="lstCliente" id="lstCliente" class="selectpicker form-control" data-live-search="true" required>
-                  <option value="" <?= isset($_GET['id']) ? '' : 'selected' ?>>Seleccionar</option>
+                  <option value="" selected >Seleccionar</option>
 
                   <?php foreach($listadoClientes as $lista): ?>
-                    <option value="<?= $lista->idcliente ?>"
-                      <?php echo isset($_GET['id']) ? 'selected' : '' ?>
-                      ><?= $lista->nombre ?>
+                  <?php if($lista->idcliente == $venta->fk_idcliente) :  ?> 
+                    <option value="<?= $lista->idcliente ?>" selected>
+                      <?= $lista->nombre ?>
                     </option>
+                    <?php else : ?>
+                      <option value="<?= $lista->idcliente ?>" >
+                      <?= $lista->nombre ?>
+                    </option>
+                    <?php endif ?>
                   <?php endforeach ?>
                 </select>
               </div>
               <div class="form-group col-12 col-sm-6 ">
                 <label for="lstProducto">Producto: </label>
                 <select name="lstProducto" id="lstProducto" class="selectpicker form-control" data-live-search="true" required>
-                  <option value="" <?= isset($_GET['id']) ? "" : "selected" ?>>Seleccionar</option>
+                  <option value="" selected>Seleccionar</option>
                   
                   <?php foreach($listaProductos as $lista) : ?>
-                  <option <?= isset($_GET['id']) ? 'selected' : '' ?>
-                  value="<?= $lista->idproducto ?>"><?= $lista->nombre ?></option>
+                  <?php if($lista->idproducto == $venta->fk_idproducto) : ?>
+                    <option value="<?= $lista->idproducto ?>" selected>
+                      <?= $lista->nombre ?>
+                    </option>
+                  <?php else : ?>
+                    <option value="<?= $lista->idproducto ?>">
+                      <?= $lista->nombre ?>
+                    </option>
+                  <?php endif ?>
                   <?php endforeach ?>
                 </select>
               </div>

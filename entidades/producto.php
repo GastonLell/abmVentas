@@ -27,18 +27,18 @@ class Producto{
         $this->descripcion = isset($request['txtDescripcion']) ? $request['txtDescripcion'] : "";
         $this->fk_idtipoproducto = isset($request['lstTipoProducto']) ? $request['lstTipoProducto'] : "";
 
-    // procesando la imagen
-    // si el archivo (img) se sube correctamente  la siguiente condicion sera true
-    if($_FILES["archivo"]["error"] === UPLOAD_ERR_OK){ 
-        $nombreAleatorio = date("Ymdhmsi"); //se le asigna un nombre aleatorio
-        $archivo_tmp = $_FILES["archivo"]["tmp_name"]; // se le da un nombre temporal
-        $nombreArchivo = $_FILES["archivo"]["name"]; // el nombre del archivo
-        $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION); // esto toma la extension del archivo
-        $nombreImagen = $nombreAleatorio . "." .$extension; // se concatena el nombre del archivo con su extension
-        move_uploaded_file($archivo_tmp, "img/$nombreImagen"); // guardar la imagen en una carpeta de archivos
-        $this->imagen = $nombreImagen;
-    }
-    
+        if(isset($_FILES['archivo'])){
+            if($_FILES["archivo"]["error"] === UPLOAD_ERR_OK){ 
+                $nombreAleatorio = date("Ymdhmsi"); 
+                $archivo_tmp = $_FILES["archivo"]["tmp_name"]; 
+                $nombreArchivo = $_FILES["archivo"]["name"]; 
+                $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
+                $nombreImagen = $nombreAleatorio . "." .$extension; 
+                move_uploaded_file($archivo_tmp, "img/$nombreImagen");
+                $this->imagen = $nombreImagen;
+            }
+        }
+        
     }
     public function insertar(){
         $mysqli = new mysqli(Config::BBDD_HOST, Config::BBDD_USUARIO, Config::BBDD_CLAVE, Config::BBDD_NOMBRE);

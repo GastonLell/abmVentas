@@ -2,27 +2,37 @@
 
 include_once('config.php');
 include_once('entidades/cliente.php');
+include_once('entidades/venta.php');
 
 $cliente = new Cliente();
 $cliente->cargarFormulario($_REQUEST);
+
+$venta = new Venta();
 
 if($_POST){
   if(isset(($_POST["btnGuardar"]))){
     if(isset($_GET['id']) && $_GET['id'] > 0){
       $cliente->actualizar();
-      $mensajeCorrecto = "Cliente actualizado correctamente";
+      $mensaje = "Cliente actualizado correctamente";
     } else {
       $cliente->insertar();
+      $mensaje = "Cliente guardado correctamente";
     } 
   }else if(isset($_POST["btnBorrar"])){
-    $cliente->eliminar();
+    $cantidadVentas = $venta->obtenerVentasClientes($cliente->idcliente);
+    if($cantidadVentas > 0){
+      $mensaje = "No se puede eliminar el cliente, tiene ventas realizadas";
+    } else {
+      $cliente->eliminar();
+      $mensaje = "Cliente eliminado correctamente";
+    }
+    
   }
 }
 if(isset($_GET['id']) && $_GET['id'] > 0){
   $cliente->idcliente = $_GET['id'];
   $cliente->obtenerPorId();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +74,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
         </div>
         <div class="botones-crud ml-4 mb-3">
           <a href="clientes.php" class="mr-2 btn btn-primary">Listado</a>
-          <button class="mr-2 btn btn-primary">Nuevo</button>
+          <a href="cliente-formulario.php" class="mr-2 btn btn-primary">Nuevo</a>
           <button name="btnGuardar" type="submit" id="btnGuardar"class="mr-2 btn btn-success">Guardar</button>
           <button name="btnBorrar" class="btn btn-danger">Borrar</button>
         </div>
@@ -101,12 +111,16 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
           </div>
 
         </div>
-        <?php if(isset($mensajeCorrecto)) : ?>
-          <div class="alert alert-success" role="alert">
-            <?= $mensajeCorrecto ?>
+
+        <?php if(isset($_POST['btnGuardar'])) : ?>
+          <div  class="alert alert-success" role="alert">
+           <?= $mensaje ?>
+          </div>
+        <?php elseif(isset($_POST['btnBorrar'])) : ?>
+          <div  class="alert alert-danger" role="alert">
+           <?= $mensaje ?>
           </div>
         <?php endif ?>
-
 
       </div>
 

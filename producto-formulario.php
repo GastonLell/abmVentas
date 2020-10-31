@@ -2,6 +2,9 @@
 include_once "config.php";
 include_once "entidades/producto.php";
 include_once "entidades/tipoproducto.php";
+include_once('entidades/venta.php');
+
+$venta = new Venta();
 
 $producto1 = new Producto();
 $producto1->cargarFormulario($_REQUEST);
@@ -13,14 +16,27 @@ if($_POST){
   if(isset($_POST['btnGuardar'])){
     if(isset($_GET['id']) && $_GET['id'] > 0){
       $producto1->actualizar();
-      $mensajeCorrecto = "Cliente actualizado correctamente";
+      $mensaje = "Producto actualizado correctamente";
     }else {
       $producto1->insertar();
+      $mensaje = "Producto actualizado correctamente";
     }
-  } else if (isset($_POST['btnBorrar'])){
-    $producto1->eliminar();
+  } else if(isset($_POST["btnBorrar"])){
+    $cantidadProductos = $venta->obtenerProductosEnVenta($producto1->idproducto);
+      if($cantidadProductos > 0){
+        $mensaje = "No se puede eliminar el producto, existe en catalogo de ventas";
+      } else {
+        $producto1->eliminar();
+        $mensaje = "Producto eliminado correctamente";
+      }
+    
   }
-}
+
+  
+} 
+
+
+
 if(isset($_GET['id']) && $_GET['id'] > 0){
   $producto1->idproducto = $_GET['id'];
   $producto1->obtenerPorId();
@@ -125,11 +141,16 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
               </div>
             </div>
           </form>
-          <?php if(isset($mensajeCorrecto)) : ?>
-          <div class="alert alert-success" role="alert">
-            <?= $mensajeCorrecto ?>
+
+          <?php if(isset($_POST['btnGuardar'])) : ?>
+          <div  class="alert alert-success" role="alert">
+           <?= $mensaje ?>
           </div>
-        <?php endif ?>
+          <?php elseif(isset($_POST['btnBorrar'])) : ?>
+            <div  class="alert alert-danger" role="alert">
+             <?= $mensaje ?>
+            </div>
+          <?php endif ?>
         </div>
       </div>
     </div>

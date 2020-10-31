@@ -63,10 +63,10 @@ $aVenta = $venta->obtenerTodos();
             <tbody>
                 <?php foreach($aVenta as $venta): ?>
                   <tr>
-                    <td><?= $venta->fechaCon ?></td>
+                    <td><?= date_format(date_create($venta->fecha), "d/m/Y H:i") ?></td>
                     <td><?= $venta->cantidad ?></td>
-                    <td><?= $venta->fk_idproducto ?></td>
-                    <td><?= $venta->fk_idclietne ?></td>
+                    <td><?= $venta->nombre_producto ?></td>
+                    <td><?= $venta->nombre_cliente ?></td>
                     <td><?= number_format($venta->total, 2, ",", ".") ?></td>
                     <td style="width: 110px;">
                       <a href="venta-formulario.php?id=<?= $venta->idventa?>"><i class="fas fa-search"></i></a>   
